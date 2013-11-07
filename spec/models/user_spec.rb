@@ -6,4 +6,8 @@ describe User do
   it 'has an email' do
     user.email.should eq('test@test.com')
   end
+
+  it 'has a token' do
+    user.ensure_authentication_token.should be
+  end
 end
