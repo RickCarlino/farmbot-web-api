@@ -1,6 +1,6 @@
 #Session controller provides a token
 class Api::V1::TokensController < ApplicationController
-  before_action :set_user, only: [:destroy]
+  skip_before_action :set_user, only: [:create]
 
   def create
     @user = User.find_for_authentication(email: params[:email])
