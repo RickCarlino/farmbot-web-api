@@ -14,11 +14,11 @@ describe 'Api::V1::Users' do
 
   describe 'DELETE api/v1/tokens' do
     it 'destroys a token' do
-      pending
-      delete api_v1_tokens_path
-      after = User.count
+      old_token = user1.ensure_authentication_token!
+      delete api_v1_tokens_path, nil, {'FARMBOT-AUTH' => user1.authentication_token}
       response.status.should eq(204)
-      before.should be > after
+      user1.reload
+      old_token.should_not eq(user1.authentication_token)
     end
   end
 end
