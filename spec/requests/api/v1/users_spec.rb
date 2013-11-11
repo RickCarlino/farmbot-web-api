@@ -1,5 +1,7 @@
 require 'spec_helper'
 
+#TODO: Create a helper for making API requests with a token included.
+
 describe 'Api::V1::Users' do
   let(:user1){ FactoryGirl.create(:user, email: 'test@test.com', password: 'password123') }
   describe 'GET /api/v1/users' do
@@ -18,7 +20,10 @@ describe 'Api::V1::Users' do
       return_value[0]["last_sign_in_ip"].should eq(user1.last_sign_in_ip)
     end
 
-    it 'stops unauthorized users from viewing records'
+    it 'stops unauthorized users from viewing records' do
+      get api_v1_users_path
+      response.status.should eq(401)
+    end
 
     it 'paginates user record results'
   end
