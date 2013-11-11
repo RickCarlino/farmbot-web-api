@@ -10,6 +10,12 @@ describe 'Api::V1::Users' do
       return_value["token"].should eq(user1.authentication_token)
       response.status.should eq(201)
     end
+
+    it 'returns unauthorized for invalid authentication' do
+      post api_v1_tokens_path, {email: 'total', password: 'error'}
+      response.status.should eq(401)
+      response.body.should eq(' ')
+    end
   end
 
   describe 'DELETE api/v1/tokens' do

@@ -1,3 +1,5 @@
+# Basic user class for a system user of Farmbot.
+# Provides a base for authentication and authorization to Farmbot equipment and information.
 class User
   include Mongoid::Document
   # Include default devise modules. Others available are:
