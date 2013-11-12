@@ -29,11 +29,7 @@ class User
   field :last_sign_in_ip,    :type => String
   field :authentication_token, :type => String
 
+  # Holds a list of authorized controller actions in the format of 'api/v1/some_controller#some_action'
   field :permissions, type: Array, default: []
-  # attr_protected :permissions
 
-  def permit?(controller, action)
-    permission = controller + '#' + action
-    true
-  end
 end
