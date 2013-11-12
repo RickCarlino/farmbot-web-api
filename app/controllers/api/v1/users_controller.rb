@@ -1,6 +1,6 @@
 class Api::V1::UsersController < ApplicationController
   before_action :set_api_v1_user, only: [:show, :update, :destroy]
-
+  skip_before_action :run_filters, only: [:create]
   # GET /api/v1/users
   # GET /api/v1/users.json
   def index
