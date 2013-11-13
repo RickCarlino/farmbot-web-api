@@ -7,8 +7,8 @@ describe 'Api::V1::Users' do
   describe 'GET /api/v1/users' do
 
     it 'returns a document representing all users' do
-      user1.ensure_authentication_token!
-      get api_v1_users_path, nil, {'FARMBOT-AUTH' => user1.authentication_token}
+      user1.add_permission! 'api/v1/users#index'
+      get_with_token_for_user user1, api_v1_users_path
       response.status.should eq(200)
       return_value = JSON.parse(response.body)
       return_value[0]["email"].should eq(user1.email)
@@ -30,8 +30,8 @@ describe 'Api::V1::Users' do
 
   describe 'GET /api/v1/users/:id' do
     it 'returns a JSON ' do
-      user1.ensure_authentication_token!
-      get api_v1_user_path(user1), nil, {'FARMBOT-AUTH' => user1.authentication_token}
+      user1.add_permission! 'api/v1/users#show'
+      get_with_token_for_user user1, api_v1_user_path(user1), nil
       return_value = JSON.parse(response.body)
       return_value["email"].should eq(user1.email)
       return_value["id"].should eq(user1._id.to_s)
@@ -44,23 +44,21 @@ describe 'Api::V1::Users' do
     end
 
     it 'returns 404 for missing records' do
-      user1.ensure_authentication_token!
-      get api_v1_user_path('nope'), nil, {'FARMBOT-AUTH' => user1.authentication_token}
+      user1.add_permission! 'api/v1/users#show'
+      get_with_token_for_user user1, api_v1_user_path('nope')
       response.status.should eq(404)
     end
   end
 
   describe 'PUT /api/v1/users/:id' do
     it 'updates a User document' do
-      user1.ensure_authentication_token!
-      put api_v1_user_path(user1), {id: user1.id.to_s, email: 'changed@changed.com', password: 'password123'}, {'FARMBOT-AUTH' => user1.authentication_token}
+      user1.add_permission! 'api/v1/users#update'
+      put_with_token_for_user user1, api_v1_user_path(user1), {id: user1.id.to_s, email: 'changed@changed.com', password: 'password123'}
       response.status.should eq(204)
     end
 
     it 'returns unprocessable entity for malformed requests' do
-      user1.ensure_authentication_token!
-      post api_v1_users_path, {not: 'a', valid: 'request'}, {'FARMBOT-AUTH' => user1.authentication_token}
-      return_value = JSON.parse(response.body)
+      post_with_token_for_user user1, api_v1_users_path, {not: 'a', valid: 'request'}
       response.status.should eq(422)
     end
 
@@ -69,8 +67,7 @@ describe 'Api::V1::Users' do
 
   describe 'POST /api/v1/users' do
     it 'creates a user' do
-      user1.ensure_authentication_token!
-      post api_v1_users_path, {email: 'rick@rick.io', password: 'soopersecret'}, {'FARMBOT-AUTH' => user1.authentication_token}
+      post_with_token_for_user user1, api_v1_users_path, {email: 'rick@rick.io', password: 'soopersecret'}, {'FARMBOT-AUTH' => user1.authentication_token}
       return_value = JSON.parse(response.body)
       return_value["email"].should eq('rick@rick.io')
       return_value["id"].should be
@@ -78,9 +75,7 @@ describe 'Api::V1::Users' do
     end
 
     it 'returns unprocessable entity for malformed requests' do
-      user1.ensure_authentication_token!
-      post api_v1_users_path, {not: 'a', valid: 'request'}, {'FARMBOT-AUTH' => user1.authentication_token}
-      return_value = JSON.parse(response.body)
+      post_with_token_for_user user1, api_v1_users_path, {not: 'a', valid: 'request'}
       response.status.should eq(422)
     end
   end
@@ -88,9 +83,9 @@ describe 'Api::V1::Users' do
   describe 'DELETE /api/v1/users/:id' do
     it 'deletes a user' do
       #OPTIMIZE: This test might not be thread safe. Might be an issue if we switch to parellel testing.
-      user1.ensure_authentication_token!
+      user1.add_permission! 'api/v1/users#destroy'
       before = User.count
-      delete api_v1_user_path(user1),nil, {'FARMBOT-AUTH' => user1.authentication_token}
+      delete_with_token_for_user user1, api_v1_user_path(user1)
       after = User.count
       response.status.should eq(204)
       before.should be > after

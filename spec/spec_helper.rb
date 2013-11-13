@@ -52,3 +52,24 @@ RSpec.configure do |config|
     DatabaseCleaner.clean
   end
 end
+
+  #some helpers for doing tokenized API requests.
+  def get_with_token_for_user(user, path, params ={} , options = {})
+    user.ensure_authentication_token!
+    get path, params, options.merge('FARMBOT-AUTH' => user.authentication_token)
+  end
+
+  def put_with_token_for_user(user, path, params = {}, options = {})
+    user.ensure_authentication_token!
+    put path, params, options.merge('FARMBOT-AUTH' => user.authentication_token)
+  end
+
+  def post_with_token_for_user(user, path, params = {}, options = {})
+    user.ensure_authentication_token!
+    post path, params, options.merge('FARMBOT-AUTH' => user.authentication_token)
+  end
+
+  def delete_with_token_for_user(user, path, params = {}, options = {})
+    user.ensure_authentication_token!
+    delete path, params, options.merge('FARMBOT-AUTH' => user.authentication_token)
+  end
