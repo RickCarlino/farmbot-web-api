@@ -29,7 +29,47 @@ class User
   field :last_sign_in_ip,    :type => String
   field :authentication_token, :type => String
 
+  #TODO: Move this permissions stuff into a service object?
+
+  # This variable serves as a list of all allowed actions for non-authenticated users
+  # The convention is CONTROLLER_NAME, followed by a '#', follwed by the ACTION_NAME
+  cattr_reader :default_permissions
+  @@default_permissions = [
+    'api/v1/users#create',
+    'api/v1/tokens#destroy',
+    'api/v1/tokens#create'
+    ]
+
   # Holds a list of authorized controller actions in the format of 'api/v1/some_controller#some_action'
-  field :permissions, type: Array, default: []
+  field :permissions, type: Array, default: @@default_permissions
+
+  def permit?(controller, action)
+    target_action = controller + '#' + action
+    if self.permissions.include?(target_action)
+      true
+    else
+      false
+    end
+  end
+
+  def add_permission(permission)
+    raise 'invalid permission format. Permissions must follow the format of "name/of/controller#action_name".' unless permission.match(/.*#.*/)
+    self.permissions << permission
+  end
+
+  def remove_permission(permission)
+    raise "Could not find permission for #{permission}" unless self.permissions.include?(permission)
+    self.permissions.delete(permission)
+  end
+
+  def add_permission!(permission)
+    add_permission(permission)
+    self.save
+  end
+
+  def remove_permission!(permission)
+    remove_permission(permission)
+    self.save
+  end
 
 end

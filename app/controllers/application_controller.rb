@@ -18,16 +18,11 @@ class ApplicationController < ActionController::Base
   # it will check against a list of default authorizations defined within the method
   # Returns :unauthorized if the user is not allowed into that controller action.
   def check_permissions
-    # This variable serves as a list of all allowed actions for non-authenticated users
-    # The convention is CONTROLLER_NAME, followed by a '#', follwed by the ACTION_NAME
-    default_permissions = [
-      'api/v1/users#create',
-    ]
     if @api_user
       head :unauthorized and return unless @api_user.permit? params[:controller], params[:action]
     else
       target_action = params[:controller] + '#' + params[:action]
-      head :unauthorized and return unless default_permissions.include?(target_action)
+      head :unauthorized and return unless User.default_permissions.include?(target_action)
     end
   end
 
