@@ -1,5 +1,6 @@
 # Basic user class for a system user of Farmbot.
-# Provides a base for authentication and authorization to Farmbot equipment and information.
+# Provides a base for authentication and authorization to Farmbot equipment and
+# information.
 class User
   include Mongoid::Document
   # Include default devise modules. Others available are:
@@ -31,8 +32,9 @@ class User
 
   #TODO: Move this permissions stuff into a service object?
 
-  # This variable serves as a list of all allowed actions for non-authenticated users
-  # The convention is CONTROLLER_NAME, followed by a '#', follwed by the ACTION_NAME
+  # This variable serves as a list of all allowed actions for non-authenticated
+  # users. The convention is CONTROLLER_NAME, followed by a '#', follwed by the
+  # ACTION_NAME
   cattr_reader :default_permissions
   @@default_permissions = [
     'api/v1/users#create',
@@ -40,7 +42,8 @@ class User
     'api/v1/tokens#create'
     ]
 
-  # Holds a list of authorized controller actions in the format of 'api/v1/some_controller#some_action'
+  # Holds a list of authorized controller actions in the format of
+  # 'api/v1/some_controller#some_action'
   field :permissions, type: Array, default: @@default_permissions
 
   def permit?(controller, action)
@@ -53,12 +56,18 @@ class User
   end
 
   def add_permission(permission)
-    raise 'invalid permission format. Permissions must follow the format of "name/of/controller#action_name".' unless permission.match(/.*#.*/)
+    unless permission.match(/.*#.*/)
+      raise 'invalid permission format. '\
+            'Permissions must follow the format of '\
+            '"name/of/controller#action_name".'
+    end
     self.permissions << permission
   end
 
   def remove_permission(permission)
-    raise "Could not find permission for #{permission}" unless self.permissions.include?(permission)
+    unless self.permissions.include?(permission)
+      raise "Could not find permission for #{permission}"
+    end
     self.permissions.delete(permission)
   end
 

@@ -1,32 +1,45 @@
+#TODO: There is too much logic hanging out in this controller. Move
+# check_permissions into a module or something
 class ApplicationController < ActionController::Base
 
+  #TODO: Turn this off in settings
   skip_before_action :verify_authenticity_token
 
   before_action :run_filters
 
-  # This is a helper method that allows me to chain the before_action filters in a correct order.
-  # This is required because set_user must always be called before check_permissions
+  # Guarantee order of before_action execution by wraping it in a function.
   def run_filters
     set_user
-    check_permissions
+    authorize
   end
 
-  #TODO: There is too much logic hanging out in this controller. Move check_permissions into a module or something
-
   # Checks the current users ability to access the current action/controller.
-  # First checks the current user's permission list. If the user is not logged in
-  # it will check against a list of default authorizations defined within the method
-  # Returns :unauthorized if the user is not allowed into that controller action.
-  def check_permissions
+  #
+  # Will attempt to authorize based on user permissions. If no token is found,
+  # will authorize from the default authorization list set in the User model.
+  def authorize
     if @api_user
-      head :unauthorized and return unless @api_user.permit? params[:controller], params[:action]
+      authorize_user
     else
-      target_action = params[:controller] + '#' + params[:action]
-      head :unauthorized and return unless User.default_permissions.include?(target_action)
+      authorize_unauthenticated_user
     end
   end
 
-  # Verify that the request has a valid FARMBOT-AUTH header, which is a User authentication_token.
+  def authorize_unauthenticated_user
+    target_action = params[:controller] + '#' + params[:action]
+    unless User.default_permissions.include?(target_action)
+      head :unauthorized and return
+    end
+  end
+
+  def authorize_user
+    unless @api_user.permit? params[:controller], params[:action]
+      head :unauthorized and return
+    end
+  end
+
+  # Verify that the request has a valid FARMBOT-AUTH header, which is a User
+  # authentication_token.
   #
   # Returns 401 on failure
   def set_user

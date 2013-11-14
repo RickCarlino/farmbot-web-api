@@ -1,5 +1,6 @@
 # The tokens controller provide a means of authenticating users of the system.
-# When a token is created, it is attached to the header of every subsiquent request.
+# When a token is created, it is attached to the header of every subsiquent
+# request.
 class Api::V1::TokensController < ApplicationController
   skip_before_action :run_filters, only: [:create]
 
