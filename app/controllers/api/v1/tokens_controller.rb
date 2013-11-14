@@ -29,8 +29,6 @@ class Api::V1::TokensController < ApplicationController
   def destroy
     if @api_user.reset_authentication_token!
       head :no_content
-    else
-      head :not_found
     end
   end
 

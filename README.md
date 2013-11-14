@@ -7,8 +7,9 @@ RESTful JSON that runs the farm.
 [![Code Climate](https://codeclimate.com/github/FarmBot/farmbot-web-api.png)](https://codeclimate.com/github/FarmBot/farmbot-web-api)
 [![Coverage Status](https://coveralls.io/repos/rickcarlino/farmbot-web-api/badge.png)](https://coveralls.io/r/rickcarlino/farmbot-web-api)
 [![Stories in Ready](https://badge.waffle.io/FarmBot/farmbot-web-api.png?label=ready)](http://waffle.io/FarmBot/farmbot-web-api)
-Usage
 [![Dependency Status](https://gemnasium.com/FarmBot/farmbot-web-api.png)](https://gemnasium.com/FarmBot/farmbot-web-api)
+
+Usage
 ===
 ![How Farmbot will work](diagram.png)
 
