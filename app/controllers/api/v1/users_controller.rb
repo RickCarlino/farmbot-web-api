@@ -1,3 +1,5 @@
+# Management of User resources.
+# TODO: Filtering of permissions to prevent users from editing other users
 class Api::V1::UsersController < ApplicationController
   before_action :set_api_v1_user, only: [:show, :update, :destroy]
   skip_before_action :run_filters, only: [:create]
@@ -56,7 +58,8 @@ class Api::V1::UsersController < ApplicationController
       render json: {error: 'document not found'}, status: 404 if @user.nil?
     end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
+    # Never trust parameters from the scary internet, only allow the white list
+    # through.
     def user_params
       params.permit(:email, :password)
     end

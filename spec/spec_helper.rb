@@ -1,6 +1,9 @@
 require 'pry'
 require 'simplecov'
+require 'coveralls'
+
 SimpleCov.start
+Coveralls.wear!
 
 ENV["RAILS_ENV"] ||= 'test'
 require File.expand_path("../../config/environment", __FILE__)
@@ -66,10 +69,11 @@ end
 
   def post_with_token_for_user(user, path, params = {}, options = {})
     user.ensure_authentication_token!
-    post path, params, options.merge('FARMBOT-AUTH' => user.authentication_token)
+    post path, params, options.merge('FARMBOT-AUTH'=>user.authentication_token)
   end
 
   def delete_with_token_for_user(user, path, params = {}, options = {})
     user.ensure_authentication_token!
-    delete path, params, options.merge('FARMBOT-AUTH' => user.authentication_token)
+    delete path, params, options.merge('FARMBOT-AUTH' =>
+      user.authentication_token)
   end

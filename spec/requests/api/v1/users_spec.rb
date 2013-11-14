@@ -3,7 +3,8 @@ require 'spec_helper'
 #TODO: Create a helper for making API requests with a token included.
 
 describe 'Api::V1::Users' do
-  let(:user1){ FactoryGirl.create(:user, email: 'test@test.com', password: 'password123') }
+  let(:user1){ FactoryGirl.create(:user, email: 'test@test.com',
+    password: 'password123') }
   describe 'GET /api/v1/users' do
 
     it 'returns a document representing all users' do
@@ -53,12 +54,15 @@ describe 'Api::V1::Users' do
   describe 'PUT /api/v1/users/:id' do
     it 'updates a User document' do
       user1.add_permission! 'api/v1/users#update'
-      put_with_token_for_user user1, api_v1_user_path(user1), {id: user1.id.to_s, email: 'changed@changed.com', password: 'password123'}
+      put_with_token_for_user user1, api_v1_user_path(user1), {
+        id: user1.id.to_s, email: 'changed@changed.com',
+        password: 'password123'}
       response.status.should eq(204)
     end
 
     it 'returns unprocessable entity for malformed requests' do
-      post_with_token_for_user user1, api_v1_users_path, {not: 'a', valid: 'request'}
+      post_with_token_for_user user1, api_v1_users_path, {not: 'a',
+        valid: 'request'}
       response.status.should eq(422)
     end
 
@@ -67,7 +71,9 @@ describe 'Api::V1::Users' do
 
   describe 'POST /api/v1/users' do
     it 'creates a user' do
-      post_with_token_for_user user1, api_v1_users_path, {email: 'rick@rick.io', password: 'soopersecret'}, {'FARMBOT-AUTH' => user1.authentication_token}
+      post_with_token_for_user user1, api_v1_users_path, {email: 'rick@rick.io',
+        password: 'soopersecret'}, {'FARMBOT-AUTH' =>
+        user1.authentication_token}
       return_value = JSON.parse(response.body)
       return_value["email"].should eq('rick@rick.io')
       return_value["id"].should be
@@ -75,14 +81,16 @@ describe 'Api::V1::Users' do
     end
 
     it 'returns unprocessable entity for malformed requests' do
-      post_with_token_for_user user1, api_v1_users_path, {not: 'a', valid: 'request'}
+      post_with_token_for_user user1, api_v1_users_path, {not: 'a',
+        valid: 'request'}
       response.status.should eq(422)
     end
   end
 
   describe 'DELETE /api/v1/users/:id' do
     it 'deletes a user' do
-      #OPTIMIZE: This test might not be thread safe. Might be an issue if we switch to parellel testing.
+      #OPTIMIZE: This test might not be thread safe. Might be an issue if we
+      # switch to parellel testing.
       user1.add_permission! 'api/v1/users#destroy'
       before = User.count
       delete_with_token_for_user user1, api_v1_user_path(user1)

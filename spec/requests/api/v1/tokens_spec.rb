@@ -1,7 +1,8 @@
 require 'spec_helper'
 
 describe 'Api::V1::Users' do
-  let(:user1){ FactoryGirl.create(:user, email: 'test@test.com', password: 'password123') }
+  let(:user1){ FactoryGirl.create(:user, email: 'test@test.com',
+    password: 'password123') }
   describe 'POST api/v1/tokens' do
     it 'gets a token' do
       post api_v1_tokens_path, {email: user1.email, password: user1.password}
@@ -21,7 +22,7 @@ describe 'Api::V1::Users' do
   describe 'DELETE api/v1/tokens' do
     it 'destroys a token' do
       old_token = user1.ensure_authentication_token!
-      delete api_v1_tokens_path, nil, {'FARMBOT-AUTH' => user1.authentication_token}
+      delete_with_token_for_user user1, api_v1_tokens_path(user1)
       response.status.should eq(204)
       user1.reload
       old_token.should_not eq(user1.authentication_token)
