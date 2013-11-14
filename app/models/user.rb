@@ -32,11 +32,10 @@ class User
 
   #TODO: Move this permissions stuff into a service object?
 
-  # This variable serves as a list of all allowed actions for non-authenticated
+  # This constant serves as a list of all allowed actions for non-authenticated
   # users. The convention is CONTROLLER_NAME, followed by a '#', follwed by the
   # ACTION_NAME
-  cattr_reader :default_permissions
-  @@default_permissions = [
+  DEFAULT_PERMISSIONS = [
     'api/v1/users#create',
     'api/v1/tokens#destroy',
     'api/v1/tokens#create'
@@ -44,7 +43,7 @@ class User
 
   # Holds a list of authorized controller actions in the format of
   # 'api/v1/some_controller#some_action'
-  field :permissions, type: Array, default: @@default_permissions
+  field :permissions, type: Array, default: DEFAULT_PERMISSIONS
 
   def permit?(controller, action)
     target_action = controller + '#' + action
@@ -53,6 +52,10 @@ class User
     else
       false
     end
+  end
+
+  def has_permission?(permission)
+    self.permissions.include?(permission)
   end
 
   def add_permission(permission)
@@ -65,7 +68,7 @@ class User
   end
 
   def remove_permission(permission)
-    unless self.permissions.include?(permission)
+    unless has_permission?(permission)
       raise "Could not find permission for #{permission}"
     end
     self.permissions.delete(permission)

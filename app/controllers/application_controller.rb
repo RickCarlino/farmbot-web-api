@@ -27,7 +27,7 @@ class ApplicationController < ActionController::Base
 
   def authorize_unauthenticated_user
     target_action = params[:controller] + '#' + params[:action]
-    unless User.default_permissions.include?(target_action)
+    unless User::DEFAULT_PERMISSIONS.include?(target_action)
       head :unauthorized and return
     end
   end
@@ -43,9 +43,8 @@ class ApplicationController < ActionController::Base
   #
   # Returns 401 on failure
   def set_user
-    #OPTIMIZE: Cache this to reduce number of DB hits.
     token = request.headers['FARMBOT-AUTH'] || false
-    @api_user = User.find_by(authentication_token: token)
+    @api_user ||= User.find_by(authentication_token: token)
     if @api_user.nil? || !token
       head :unauthorized and return
     end

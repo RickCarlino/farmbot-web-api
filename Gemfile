@@ -32,6 +32,9 @@ gem 'high_voltage'
 gem 'anjlab-bootstrap-rails', :require => 'bootstrap-rails',
                               :github => 'anjlab/bootstrap-rails'
 
+#For that cool code coverage badge on our README page.
+gem 'coveralls', require: false
+
 group :doc do
   # bundle exec rake doc:rails generates the API under doc/api.
   gem 'sdoc', require: false

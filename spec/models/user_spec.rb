@@ -28,9 +28,9 @@ describe User do
   end
 
   it 'returns true for permitted paths' do
-    controller_name = User.default_permissions.first.split('#')[0]
+    controller_name = User::DEFAULT_PERMISSIONS.first.split('#')[0]
       #EX: 'api/v1/users'
-    action_name     = User.default_permissions.first.split('#')[1]
+    action_name     = User::DEFAULT_PERMISSIONS.first.split('#')[1]
       #EX: 'index', 'show', etc...
     user.permit?(controller_name, action_name).should be_true
   end
