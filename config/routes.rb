@@ -1,6 +1,4 @@
 Farmbot::Application.routes.draw do
-  #TODO: We won't need root level devise when we have a finished frontend UI. Delete this route when that happens:
-  devise_for :users
 
   root :to => 'high_voltage/pages#show', id: 'home'
 

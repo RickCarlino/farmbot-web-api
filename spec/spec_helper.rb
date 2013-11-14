@@ -2,8 +2,8 @@ require 'pry'
 require 'simplecov'
 require 'coveralls'
 
-Coveralls.wear!
 SimpleCov.start
+Coveralls.wear!
 
 ENV["RAILS_ENV"] ||= 'test'
 require File.expand_path("../../config/environment", __FILE__)

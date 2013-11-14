@@ -2,7 +2,6 @@
 # check_permissions into a module or something
 class ApplicationController < ActionController::Base
 
-  #TODO: Turn this off in settings
   skip_before_action :verify_authenticity_token
 
   before_action :run_filters
@@ -25,6 +24,9 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  # Checks against the default permissions list to see if a user is allowed to
+  # use a particular Controler / Action. Returns :unauthorized if it is not on
+  # the default permissions list.
   def authorize_unauthenticated_user
     target_action = params[:controller] + '#' + params[:action]
     unless User::DEFAULT_PERMISSIONS.include?(target_action)
@@ -32,6 +34,8 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  # Check an authenticated users permission list and return :unauthorized if
+  # they do not have permissions to access the current Controller / Action.
   def authorize_user
     unless @api_user.permit? params[:controller], params[:action]
       head :unauthorized and return

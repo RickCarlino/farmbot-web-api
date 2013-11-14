@@ -45,6 +45,12 @@ class User
   # 'api/v1/some_controller#some_action'
   field :permissions, type: Array, default: DEFAULT_PERMISSIONS
 
+  # Determines if a user has access to a particular Controller/Action
+  #
+  # Returns Boolean.
+  #
+  # (String) Controler - The controller.
+  # (String) Action    - The action.
   def permit?(controller, action)
     target_action = controller + '#' + action
     if self.permissions.include?(target_action)
@@ -54,10 +60,20 @@ class User
     end
   end
 
+  # Determines if an AUTHENTICATED system user is able to access a particular
+  # Controller / Action.
+  #
+  # Returns Boolean
+  #
+  # (String) permission - String in the format of 'controller_name#action_name'
   def has_permission?(permission)
     self.permissions.include?(permission)
   end
 
+  # Adds a permission to a particular user's permissions list. Does not save the
+  # document.
+  #
+  # Returns Array of all permissions
   def add_permission(permission)
     unless permission.match(/.*#.*/)
       raise 'invalid permission format. '\
@@ -67,6 +83,9 @@ class User
     self.permissions << permission
   end
 
+  # Removes a users permission from the permission list. Does not save document.
+  #
+  # Returns a String representation of the deleted permission
   def remove_permission(permission)
     unless has_permission?(permission)
       raise "Could not find permission for #{permission}"
@@ -74,11 +93,17 @@ class User
     self.permissions.delete(permission)
   end
 
+  # Adds a permission for a User AND PERSISTS THE DOCUMENT.
+  #
+  # Returns Boolean representing the status of the save attempt
   def add_permission!(permission)
     add_permission(permission)
     self.save
   end
 
+  # removes a permission for a User AND PERSISTS THE DOCUMENT.
+  #
+  # Returns Boolean representing the status of the save attempt
   def remove_permission!(permission)
     remove_permission(permission)
     self.save

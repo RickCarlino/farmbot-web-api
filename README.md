@@ -8,10 +8,11 @@ RESTful JSON that runs the farm.
 [![Coverage Status](https://coveralls.io/repos/rickcarlino/farmbot-web-api/badge.png)](https://coveralls.io/r/rickcarlino/farmbot-web-api)
 [![Stories in Ready](https://badge.waffle.io/FarmBot/farmbot-web-api.png?label=ready)](http://waffle.io/FarmBot/farmbot-web-api)
 Usage
+[![Dependency Status](https://gemnasium.com/FarmBot/farmbot-web-api.png)](https://gemnasium.com/FarmBot/farmbot-web-api)
 ===
 ![How Farmbot will work](diagram.png)
 
-You will need to CURL for now. Eventually, there will be [a graphical frontend](https://github.com/FarmBot/farmbot-frontend). [API docs](https://github.com/FarmBot/farmbot-web-api/wiki) are on the way!
+You will need to CURL for now. Eventually, there will be [a graphical frontend](https://github.com/FarmBot/farmbot-frontend). [API docs](https://github.com/FarmBot/farmbot-web-api/wiki) are half way done!
 
 Pre-install Dependencies
 ===
