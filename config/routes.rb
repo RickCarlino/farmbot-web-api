@@ -4,6 +4,7 @@ Farmbot::Application.routes.draw do
 
   namespace :api, defaults: {format: 'json'} do
     namespace :v1 do
+      # TODO: Why did I do except?
       resources :users, except: [:new, :edit]
       resource :tokens, only: [:create, :destroy] #Notice 'resource' is not plural.
     end
