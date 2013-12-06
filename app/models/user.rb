@@ -6,7 +6,7 @@ class User
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable,
-         :recoverable, :trackable, :validatable, :token_authenticatable
+         :recoverable, :trackable, :validatable
          #TODO: Upgrade from the now deprecated token_authenticable
          # Details here:
          # https://gist.github.com/josevalim/fb706b1e933ef01e4fb6

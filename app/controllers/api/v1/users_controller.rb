@@ -54,8 +54,9 @@ class Api::V1::UsersController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_api_v1_user
-      @user = User.find(params[:id])
-      render json: {error: 'document not found'}, status: 404 if @user.nil?
+      unless @user = User.find(params[:id])
+        render json: {error: 'document not found'}, status: 404
+      end
     end
 
     # Never trust parameters from the scary internet, only allow the white list
