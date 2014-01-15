@@ -1,3 +1,10 @@
+# DEPRECATED! DEPRECATED! DO NOT USE
+
+### FarmBot has a new device communication model
+
+We are in the process of transitioning FarmBot onto [SkyNet](http://www.skynet.im). This offloads all of our previous responsibilities into the cloud and therefore deprecates this repo.
+
+
 ![Farmbot Web API](logo.png)
 Farmbot Web API
 ===
